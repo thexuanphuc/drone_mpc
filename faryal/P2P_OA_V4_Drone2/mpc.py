@@ -156,7 +156,7 @@ class P2P_OA_MPC(Variables_Defination):
 
         X = ca.SX.sym('X', self.n_states, (self.N+1))
 
-        P = ca.SX.sym('P', 2 * self.n_states)  # [initial_state, reference_state]
+        P = ca.SX.sym('P', 2 * self.n_states)  # [initial_state, goal_state]
         OBS = ca.SX.sym('OBS', 3)
 
         #---- State Weights
@@ -220,33 +220,9 @@ class P2P_OA_MPC(Variables_Defination):
             st_next_rk4 = st + (self.T/6)*(k1 + (2*k2) + (2*k3) + k4)
             g.append(st_next - st_next_rk4)
 
-        lbg = []
-        ubg = []
-        for _ in range(self.N+1):
-            lbg.append(0.0)
-            lbg.append(0.0)
-            lbg.append(0.0)
-            lbg.append(0.0)
-            lbg.append(0.0)
-            lbg.append(0.0)
-            lbg.append(0.0)
-            lbg.append(0.0)
-            lbg.append(0.0)
-            lbg.append(0.0)
-            lbg.append(0.0)
-            lbg.append(0.0)
-            ubg.append(0.0)
-            ubg.append(0.0)
-            ubg.append(0.0)
-            ubg.append(0.0)
-            ubg.append(0.0)
-            ubg.append(0.0)
-            ubg.append(0.0)
-            ubg.append(0.0)
-            ubg.append(0.0)
-            ubg.append(0.0)
-            ubg.append(0.0)
-            ubg.append(0.0)
+        # Equality constraints: all should be zero
+        lbg = [0.0] * ((self.N + 1) * self.n_states)
+        ubg = [0.0] * ((self.N + 1) * self.n_states)
 
         #---- Casadi Non-linear Problem
         opt_variables = ca.vertcat(
@@ -282,40 +258,14 @@ class P2P_OA_MPC(Variables_Defination):
         #---- Control and State Limits
         lbx = []
         ubx = []
-        for _ in range(self.N):
-            lbx.append(motor_force_min)   # minimum constraint for motor 1
-            ubx.append(motor_force_max)   # maximum constraint for motor 1
-            lbx.append(motor_force_min)   # minimum constraint for motor 2
-            ubx.append(motor_force_max)   # maximum constraint for motor 2
-            lbx.append(motor_force_min)   # minimum constraint for motor 3
-            ubx.append(motor_force_max)   # maximum constraint for motor 3
-            lbx.append(motor_force_min)   # minimum constraint for motor 4
-            ubx.append(motor_force_max)   # maximum constraint for motor 4
-        for _ in range(self.N + 1):
-            lbx.append(x_min)       # minimum constraint for x
-            ubx.append(x_max)       # maximum constraint for x
-            lbx.append(y_min)       # minimum constraint for y
-            ubx.append(y_max)       # maximum constraint for y
-            lbx.append(z_min)       # minimum constraint for z
-            ubx.append(z_max)       # maximum constraint for z
-            lbx.append(u_min)       # minimum constraint for u
-            ubx.append(u_max)       # maximum constraint for u
-            lbx.append(v_min)       # minimum constraint for v
-            ubx.append(v_max)       # maximum constraint for v
-            lbx.append(w_min)       # minimum constraint for w
-            ubx.append(w_max)       # maximum constraint for w
-            lbx.append(phi_min)     # minimum constraint for phi
-            ubx.append(phi_max)     # maximum constraint for phi
-            lbx.append(theta_min)   # minimum constraint for theta
-            ubx.append(theta_max)   # maximum constraint for theta
-            lbx.append(psi_min)     # minimum constraint for psi
-            ubx.append(psi_max)     # maximum constraint for psi
-            lbx.append(p_min)       # minimum constraint for p
-            ubx.append(p_max)       # maximum constraint for p
-            lbx.append(q_min)       # minimum constraint for q
-            ubx.append(q_max)       # maximum constraint for q
-            lbx.append(r_min)       # minimum constraint for r
-            ubx.append(r_max)       # maximum constraint for r
+        # Control input bounds for all N steps
+        lbx.extend(np.kron(np.ones(self.N), [motor_force_min]*self.n_controls).tolist())
+        ubx.extend(np.kron(np.ones(self.N), [motor_force_max]*self.n_controls).tolist())
+        # Create state bounds vectors
+        state_lbx = [x_min, y_min, z_min, u_min, v_min, w_min, phi_min, theta_min, psi_min, p_min, q_min, r_min]
+        state_ubx = [x_max, y_max, z_max, u_max, v_max, w_max, phi_max, theta_max, psi_max, p_max, q_max, r_max]
+        lbx.extend(np.kron(np.ones(self.N + 1), state_lbx).tolist())
+        ubx.extend(np.kron(np.ones(self.N + 1), state_ubx).tolist())
             
         self.args = {
                 'lbg': lbg,  
