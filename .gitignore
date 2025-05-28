@@ -1,0 +1,78 @@
+# Python
+# Ignore Python bytecode files
+**/__pycache__/
+*.pyc
+*.pyd
+*.pyo
+*.egg
+*.egg-info/
+build/
+dist/
+venv/
+.venv/
+env/
+.env/
+
+# Jupyter Notebook specific ignores
+.ipynb_checkpoints/
+*.ipynb_checkpoints/
+# Jupyter Lab and classic notebook store metadata and state in these directories
+.jupyter/
+# Output files that can be regenerated
+# (Be careful with this if your notebooks contain results you want to commit)
+# You might want to uncomment these lines if your notebooks generate large outputs
+# and you don't want to commit them directly.
+# However, if your notebooks are meant to be run by others and display specific
+# outputs, keep these commented out.
+*.ipynb_checkpoints
+*.sqlite
+*.db
+
+# Development artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+.nox/
+.tox/
+.mypy_cache/
+.vscode/
+
+# Operating System Files
+.DS_Store
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs and databases
+*.log
+*.sqlite3
+*.db
+
+# Environment variables
+.env
+.flaskenv
+
+# Data files (often large or regenerated)
+# Consider ignoring large datasets or intermediate processing files
+# if they can be regenerated from source data.
+# For example:
+# /data/
+# *.csv
+# *.json
+# *.pkl
+# *.hdf5
+# *.h5
+
+# Miscellaneous
+# If you use popular IDEs like PyCharm, VS Code, etc., uncomment their specific ignore lines:
+# .idea/             # PyCharm project files
+.vscode/           # VS Code settings (uncomment if you want to ignore)
+*.sublime-project
+*.sublime-workspace
+# *.swp              # Vim swap files
+# *.swo
+
+# Temporary files
+*~
+*.bak
+*.tmp
