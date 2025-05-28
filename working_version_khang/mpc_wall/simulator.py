@@ -3,7 +3,8 @@ import numpy as np
 import casadi as ca
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-
+import time
+import os 
 try:
     import pandas as pd
     PANDAS_AVAILABLE = True
@@ -35,7 +36,7 @@ class AdvancedSimulator:
         self.mpc_predicted_log = [] 
         self.control_input_log = []
         self.prev_w_opt = None 
-
+        self.mpc_compute_time_log = []
         self.env.process(self.plant_process())
         self.env.process(self.mpc_process())
 
@@ -79,11 +80,15 @@ class AdvancedSimulator:
                 w_guess_for_solver = ca.vertcat(initial_u_guess_flat, initial_x_guess_flat)
 
             try:
+
+                start_time = time.time()  # Start timing the MPC computation
                 u_sequence_ca, x_sequence_ca, w_opt_solution = self.mpc.run_once(
                     current_state_for_mpc_np, 
                     self.target_state_np,
                     initial_guess_w=w_guess_for_solver 
                 )
+                end_time = time.time()  # End timing the MPC computation
+                self.mpc_compute_time_log.append(end_time - start_time)
                 self.latest_control_input_np = u_sequence_ca[:, 0].full().flatten()
                 self.prev_w_opt = w_opt_solution 
 
@@ -99,20 +104,27 @@ class AdvancedSimulator:
             if iteration_count % 10 == 0: 
                 print(f"Sim Time: {self.env.now:.2f}s, MPC Iter: {iteration_count}, "
                       f"Pos: [{current_state_for_mpc_np[0]:.2f}, {current_state_for_mpc_np[1]:.2f}, {current_state_for_mpc_np[2]:.2f}]")
-
+                
+                # print the mean MPC compute time
+                if self.mpc_compute_time_log:
+                    mean_mpc_time = np.mean(self.mpc_compute_time_log)
+                    print(f"Mean MPC Compute Time --------------------------------------------: {mean_mpc_time*1000:.2f} ms")
             yield self.env.timeout(self.mpc_dt)
 
     def run_simulation(self, until_time):
         print(f"Starting simulation. Plant_dt={self.plant_dt*1000:.1f}ms ({(1/self.plant_dt):.1f}Hz), "
               f"MPC_dt={self.mpc_dt*1000:.1f}ms ({(1/self.mpc_dt):.1f}Hz).")
         self.env.run(until=until_time)
+        # export mpc_compute_time_log to files to compare RK4 and collocation
+        # if self.mpc_compute_time_log:
+        #     np.savetxt("mpc_compute_time_log_collocation.txt", self.mpc_compute_time_log, fmt='%.6f', header='MPC Compute Time (seconds)')
+        #     print("MPC compute time log exported to 'mpc_compute_time_log.txt' and 'mpc_compute_time_log.xlsx'.")
         print("Simulation finished.")
-
 
 
 class Plotter:
     @staticmethod
-    def trajectory(actual_log, predicted_log, start_np, target_np, obstacles_info):
+    def trajectory(actual_log, predicted_log, start_np, target_np, obstacles_info, scenario_to_run):
         actual_np = np.array(actual_log)
         predicted_np = np.array(predicted_log)
         
@@ -191,18 +203,29 @@ class Plotter:
             ax.set_zlim(0, max(all_z)+0.5 if all_z else 5) 
 
         ax.legend(fontsize=10); ax.grid(True)
+
+        # --- Code to save the plot ---
+        output_folder = 'media'
+        if not os.path.exists(output_folder):
+            os.makedirs(output_folder) # Create the 'media' folder if it doesn't exist
+        
+        # Define the path to save the plot
+        file_path = os.path.join(output_folder, f'trajectory_plot_{scenario_to_run}.png')
+        plt.savefig(file_path) # Save the figure
+        print(f"Plot saved to: {file_path}")
+        # --- End of saving code ---
         plt.show()
 
     @staticmethod
-    def states_vs_time(time_log, actual_log, predicted_log):
+    def states_vs_time(time_log, actual_log, predicted_log, scenario_to_run):
         actual_np = np.array(actual_log)
         predicted_np = np.array(predicted_log)
         time_np = np.array(time_log)
 
         labels = ['x (m)','y (m)','z (m)',
-                  'phi (rad)','theta (rad)','psi (rad)',
-                  'vx_w (m/s)','vy_w (m/s)','vz_w (m/s)',
-                  'p (rad/s)','q (rad/s)','r (rad/s)']
+                'phi (rad)','theta (rad)','psi (rad)',
+                'vx_w (m/s)','vy_w (m/s)','vz_w (m/s)',
+                'p (rad/s)','q (rad/s)','r (rad/s)']
         
         if not time_np.size or not actual_np.size:
             print("Not enough data to plot states vs time.")
@@ -223,8 +246,21 @@ class Plotter:
             else:
                 ax.axis('off') 
         fig.suptitle('State Trajectories vs. Time', fontsize=16)
-        plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
-        plt.show()
+        plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+
+        # --- Code to save the plot ---
+        output_folder = 'media'
+        if not os.path.exists(output_folder):
+            os.makedirs(output_folder) # Create the 'media' folder if it doesn't exist
+        
+        # Define the path to save the plot
+        file_path = os.path.join(output_folder, f'state_trajectories_{scenario_to_run}.png') 
+        plt.savefig(file_path) # Save the figure
+        print(f"Plot saved to: {file_path}")
+        # --- End of saving code ---
+
+        plt.show() # Display the plot (optional, remove if you only want to save)
+
 
 def export_simulation_data(time_log, actual_state_log, txt_filename="drone_data.txt", excel_filename="drone_data.xlsx"):
     if not time_log or not actual_state_log:
@@ -247,7 +283,8 @@ def export_simulation_data(time_log, actual_state_log, txt_filename="drone_data.
         'Theta_rot (rad)': states[:, 4],
         'Psi_rot (rad)': states[:, 5]
     }
-
+    txt_filename = os.path.join("data", txt_filename)
+    excel_filename = os.path.join("data", excel_filename)
     try:
         with open(txt_filename, 'w') as f_txt:
             header = ",".join(data_to_export.keys())

@@ -124,7 +124,7 @@ class QuadcopterMPC:
         # Order: x,y,z, phi,theta,psi, vx_w,vy_w,vz_w, p,q,r
         Q_diag_values = [
             50, 50, 10,  # x, y, z positions 
-            40, 40, 40,  # phi, theta, psi angles
+            20, 20, 20,  # phi, theta, psi angles
             10, 10, 20,   # vx, vy, vz_w (significantly reduced vz_w cost from 40 to 5)
             1,  1,  1    # p, q, r body angular rates 
         ]
@@ -154,6 +154,14 @@ class QuadcopterMPC:
             # constraints for the collocation method
             g_eq_constraints.append(f_k_half - x_k_dot_half)
             f_previous = f_next
+
+            # # RK4
+            # st = X[:,k]; ct = U[:,k]
+            # k1 = self.f(st, ct); k2 = self.f(st + self.T/2*k1, ct)
+            # k3 = self.f(st + self.T/2*k2, ct); k4 = self.f(st + self.T*k3, ct)
+            # st_next_rk4 = st + self.T/6*(k1 + 2*k2 + 2*k3 + k4)
+            # g_eq_constraints.append(X[:,k+1] - st_next_rk4)
+
 
         for k in range(self.N):
             st = X[:,k]; ct = U[:,k]

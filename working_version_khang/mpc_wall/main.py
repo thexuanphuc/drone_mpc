@@ -4,9 +4,9 @@ from simulator import AdvancedSimulator, Plotter, export_simulation_data
 
 if __name__ == '__main__':
     # MODIFIED: Set scenario to 1 and adjust target_pos to test "going over"
-    scenario_to_run = 3
+    scenario_to_run = 1
 
-    mpc_freq = 10.0
+    mpc_freq = 20.0
     plant_freq = 100.0
 
     mpc_dt_sim = 1.0 / mpc_freq
@@ -51,12 +51,14 @@ if __name__ == '__main__':
             advanced_sim.mpc_predicted_log,
             initial_state_np, 
             target_state_np,  
-            mpc_controller.obstacles
+            mpc_controller.obstacles,
+            scenario_to_run
         )
         Plotter.states_vs_time(
             advanced_sim.time_log,
             advanced_sim.actual_state_log,
-            advanced_sim.mpc_predicted_log
+            advanced_sim.mpc_predicted_log,
+            scenario_to_run
         )
         export_simulation_data(
             advanced_sim.time_log,
