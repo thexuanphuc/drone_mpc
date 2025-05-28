@@ -4,7 +4,7 @@ from direct_collocation import QuadcopterMPC
 from simulator import AdvancedSimulator, Plotter
 
 if __name__ == '__main__':
-    mpc_freq = 10.0  # Hz
+    mpc_freq = 20.0  # Hz
     plant_freq = 100.0 # Hz
 
     mpc_dt_sim = 1.0 / mpc_freq

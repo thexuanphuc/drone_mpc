@@ -86,7 +86,7 @@ class QuadcopterMPC:
         Q = ca.diag(Q_diag_values)
         R_diag_values = [3.0, 3.0, 3.0, 3.0] 
         R = ca.diag(R_diag_values)
-        Q_terminal_diag_values = [100,100,100, 200,200,200, 2,2,2, 0.5,0.5,0.5]
+        Q_terminal_diag_values = [1000,1000,1000, 2000,2000,2000, 2,2,2, 0.5,0.5,0.5]
         Qf = ca.diag(Q_terminal_diag_values)
 
         obj = 0
@@ -96,7 +96,7 @@ class QuadcopterMPC:
         g_ineq_constraints = []
         f_previous = self.f(X[:,0], U[:,0])  # Initialize previous f
 
-        for k in range(self.N-2):
+        for k in range(self.N-1):
             # dynamic constraints using collocation
             # f_previous = self.f(X[:,k], U[:,k])
             f_next = self.f(X[:,k+1], U[:,k+1])
@@ -130,10 +130,10 @@ class QuadcopterMPC:
                 dx = current_state_in_horizon[0] - obs['cx'] 
                 dy = current_state_in_horizon[1] - obs['cy'] 
                 # Smoothly enforce x-y constraint only when z <= max_z using sigmoid
-                # k_sigmoid = 200.0  # Steepness parameter for sigmoid (tune as needed)
-                # sigmoid_z = 1.0 / (1.0 + ca.exp(k_sigmoid * dz))  # Sigmoid: ~1 if z < max_z, ~0 if z > max_z
-                # g_ineq_constraints.append(dx**2 + dy**2 - sigmoid_z * (obs['r'] + self.buffer)**2)
-                g_ineq_constraints.append(dx**2 + dy**2 - 1 * (obs['r'] + self.buffer)**2)
+                k_sigmoid = 100.0  # Steepness parameter for sigmoid (tune as needed)
+                sigmoid_z = 1.0 / (1.0 + ca.exp(k_sigmoid * dz))  # Sigmoid: ~1 if z < max_z, ~0 if z > max_z
+                g_ineq_constraints.append(dx**2 + dy**2 - sigmoid_z * (obs['r'] + self.buffer)**2)
+                # g_ineq_constraints.append(dx**2 + dy**2 - 1 * (obs['r'] + self.buffer)**2)
         
         eT = X[:,self.N] - P[self.n_states:(2*self.n_states)]
         obj += ca.mtimes([eT.T, Qf, eT])
@@ -164,8 +164,8 @@ class QuadcopterMPC:
         lb_controls_list = [-1.0] * (self.N * self.n_controls)
         ub_controls_list = [15.0] * (self.N * self.n_controls)
         # state bounds
-        state_bounds_lb_template = [-15.0,-15.0,0.0, -ca.pi/4,-ca.pi/4,-ca.pi, -2.0,-2.0,-2.0, -3*ca.pi,-3*ca.pi,-3*ca.pi]
-        state_bounds_ub_template = [15.0,15.0,5.0, ca.pi/4,ca.pi/4,ca.pi, 2.0,2.0,2.0, 3*ca.pi,3*ca.pi,3*ca.pi]
+        state_bounds_lb_template = [-15.0,-15.0,0.0, -ca.pi/4,-ca.pi/4,-ca.pi, -2.0,-2.0,-2.0, -5*ca.pi,-5*ca.pi,-5*ca.pi]
+        state_bounds_ub_template = [15.0,15.0,5.0, ca.pi/4,ca.pi/4,ca.pi, 2.0,2.0,2.0, 5*ca.pi,5*ca.pi,5*ca.pi]
         lb_states_list = []; ub_states_list = []
         for _ in range(self.N + 1):
             lb_states_list.extend(state_bounds_lb_template)
