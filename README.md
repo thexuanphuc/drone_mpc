@@ -242,8 +242,8 @@ WHILE simulation_time < simulation_end_time:
                 initial_guess_for_W = mpc_warm_start_solution // Use previous solution for warm start
             )
 
-        // 3. Extract the first optimal control input to apply to the plant
-        control_to_apply_u0 = Optimal_U_sequence[:, 0] // First column is u(0)
+        // 3. Extract the first optimal control action to apply to the plant
+        control_to_apply_a0 = Optimal_A_sequence[:, 0] // First column is a(0)
 
         // Update time for next MPC run
         last_mpc_run_time = simulation_time
@@ -252,19 +252,19 @@ WHILE simulation_time < simulation_end_time:
         Add Optimal_X_sequence to logged_mpc_predictions
     END IF
 
-    // 4. Apply the chosen control_to_apply_u0 to the plant
+    // 4. Apply the chosen control_to_apply_a0 to the plant
     //    (This control is held constant until the next MPC step updates it)
 
     // 5. Propagate Plant Dynamics (Simulate the actual quadcopter)
     //    Use a numerical integrator (e.g., RK4) with the plant_integration_timestep
     plant_state_derivative = quadcopter_mpc_controller.f_dynamics(plant_current_state, control_to_apply_u0)
-    plant_next_state = Integrate_Dynamics_RK4(plant_current_state, control_to_apply_u0, plant_state_derivative, dt_plant, quadcopter_mpc_controller.f_dynamics)
+    plant_next_state = Integrate_Dynamics_RK4(plant_current_state, control_to_apply_a0, plant_state_derivative, dt_plant, quadcopter_mpc_controller.f_dynamics)
     plant_current_state = plant_next_state
 
     // 6. Log Data
     Add simulation_time to logged_times
     Add plant_current_state to logged_plant_states
-    Add control_to_apply_u0 to logged_applied_controls
+    Add control_to_apply_a0 to logged_applied_controls
 
     // Advance simulation time
     simulation_time = simulation_time + dt_plant
