@@ -15,7 +15,7 @@
       - [4. Translational Dynamics](#4-translational-dynamics)
       - [5. Euler Angle Rates](#5-euler-angle-rates)
       - [6. Rotational Dynamics](#6-rotational-dynamics)
-  - [MPC Formulation as an NLP](#mpc-formulation-as-an-nlp)
+  - [MPC Formulation as an NLP](#mpc-formulation)
     - [Objective Function](#objective-function)
     - [Constraints](#constraints)
   - [Assumptions](#assumptions)
@@ -105,7 +105,7 @@ $$\dot{r} = \frac{Ix - Iy}{Iz}pq + \frac{Kd}{Iz}f_4$$
 These equations are wrapped in a CasADi function `f(s, a)` and integrated using Runge–Kutta (RK4) with sampling time `T = 0.1 s`.
 
 
-## MPC Formulation as an NLP
+## MPC Formulation
 
 We use a multiple shooting formulation over horizon `N` with sampling interval `delta_t`. At each step, we solve:
 
