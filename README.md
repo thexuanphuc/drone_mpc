@@ -83,11 +83,9 @@ $$
 
 #### 4. Translational Dynamics
 
-$$
-\dot{u} = \frac{1}{m} (\cos \phi \sin \theta \cos\psi + \sin\phi \sin\psi) f1  \\
-\dot{v} = \frac{1}{m} (\cos\phi \sin\theta \sin\psi - \sin\phi \cos\psi) f1  \\
-\dot{w} = \frac{1}{m} (\cos\phi \cos\theta)  f1 - g
-$$
+$$ \dot{u} = \frac{1}{m} (\cos \phi \sin \theta \cos\psi + \sin\phi \sin\psi) f1 $$ 
+$$ \dot{v} = \frac{1}{m} (\cos\phi \sin\theta \sin\psi - \sin\phi \cos\psi) f1 $$
+$$ \dot{w} = \frac{1}{m} (\cos\phi \cos\theta)  f1 - g $$
 
 #### 5. Euler Angle Rates
 
