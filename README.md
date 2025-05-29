@@ -114,17 +114,16 @@ These equations are wrapped in a CasADi function `f(s, a)` and integrated using 
 We use a multiple shooting formulation over horizon `N` with sampling interval `delta_t`. At each step, we solve:
 
 ### Objective Function
+
 The stage cost `l(s_k, a_k, s_r)` and terminal cost `l_f(s_N, s_r)` are defined as:
-$$
-l(s_k, a_k, s_r) = (s_k - s_r)ᵀ Q (s_k - s_r) + a_kᵀ R a_k  \\
-l_f(s_N, s_r) = (s_N - s_r)ᵀ Q_f (s_N - s_r) \\
-$$
+
+$$l(s_k, a_k, s_r) = (s_k - s_r)ᵀ Q (s_k - s_r) + a_kᵀ R a_k$$
+
+$$l_f(s_N, s_r) = (s_N - s_r)ᵀ Q_f (s_N - s_r)$$
 
 The total cost J is:
-$$
-min_{{a_k}^{N-1}, {{s_k}^N}}   
-J = Σ_{k=0}^{N-1} l(s_k, a_k, s_r) + l_f(s_N, s_r)
-$$
+
+$$min_{{a_k}^{N-1}, {{s_k}^N}} J = Σ_{k=0}^{N-1} l(s_k, a_k, s_r) + l_f(s_N, s_r)$$
 
 
 where:
