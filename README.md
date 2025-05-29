@@ -363,7 +363,7 @@ Display "Simulation Ended".
 2. Run the simulation script:
 
    ```bash
-   python your_script.py
+   python main.py
    ```
 
 3. Adjust initial/target states, sampling times, or MPC weights in `__main__`.
