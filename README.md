@@ -2,6 +2,12 @@
 
 <img src="src/media/trajectory_plot_1.png" width="200" /><img src="src/media/trajectory_plot_2.png" width="200" /><img src="src/media/trajectory_plot_3.png" width="200" /><img src="src/media/trajectory_plot_4.png" width="200" />
 
+
+<!-- add video -->
+<video src="src/media/Movie_008_1.mp4" width="300" controls></video>
+<video src="src/media/Movie_009.mp4" width="300" controls></video>
+<video src="src/media/Movie_010.mp4" width="300" controls></video>
+
 ## Table of Contents
 
 - [Quadcopter Model](#quadcopter-model)
