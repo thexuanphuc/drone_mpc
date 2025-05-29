@@ -188,9 +188,52 @@ $$
 &\text{subject to:} \\\\
 &\quad G_{\text{eq}}(W) = 0 \quad \text{(equality constraints)} \\\\
 &\quad G_{\text{ineq}}(W) \geq 0 \quad \text{(inequality constraints)} \\\\
-&\quad W_{\min} \leq W \leq W_{\max} \quad \text{(box constraints)}
+% &\quad W_{\min} \leq W \leq W_{\max} \quad \text{(box constraints)}
 \end{aligned}
 $$
+
+#### Obstacle Interpretation
+
+
+1. Cylindrical Obstacle Cost
+
+<img src="src/media/cylinder_cost.png" width="400" />
+
+For a point (x,y,z) relative to a cylinder at (cx​,cy​) with radius r and maximum height zmax​:
+
+
++ conditioner (sigmoid):
+
+
+$$condition = 1 + e^{-\beta \cdot (z_{cylinder} - z)}$$
+
+
+$$\text{Constraint}​(x,y,z)= dx^2 + dy^2 - condition \cdot (R^2)$$
+
+
+2. Box Obstacle Cost
+
+<img src="src/media/box_cost.png" width="400" />
+
+
+For a point (x,y,z) relative to a box defined by $[x_{min}​, x_{max}​]$, $[y_{min}​,y_{max}​]$, $[z_{min}​,z_{max}​]$:
+
+
++ Distance to box
+
+
+$$d^x_{max}, d^x_{min} ,d^y_{max}, d^y_{min}, d^z_{max}, d^z_{min}$$
+
+
+$$\text{Constraint}​(x,y,z)= -\prod{sigmoid(-d_i)}$$
+
+
+
++ if ouside $sigmoid(-d_i) \rightarrow 0$
+
+
++ if inside $sigmoid(-d_i) \rightarrow -1$ 
+
 
 This is achieved as follows:
 
