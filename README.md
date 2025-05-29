@@ -7,9 +7,9 @@
 <video src="src/media/Movie_008_1.mp4" width="300" controls></video>
 <video src="src/media/Movie_009.mp4" width="300" controls></video>
 <video src="src/media/Movie_010.mp4" width="300" controls></video>
-![Video Demonstration](https://github.com/thexuanphuc/drone_mpc/blob/present/src/media/Movie_008_1.mp4)
-![Video Demonstration](https://github.com/thexuanphuc/drone_mpc/blob/present/src/media/Movie_009.mp4)
-![Video Demonstration](https://github.com/thexuanphuc/drone_mpc/blob/present/src/media/Movie_010.mp4)
+![Video Demonstration](https://github.com/thexuanphuc/drone_mpc/blob/present/src/media/Movie_008_1.gif)
+![Video Demonstration](https://github.com/thexuanphuc/drone_mpc/blob/present/src/media/Movie_009.gif)
+![Video Demonstration](https://github.com/thexuanphuc/drone_mpc/blob/present/src/media/Movie_010.gif)
 
 ## Table of Contents
 
