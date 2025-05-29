@@ -1,6 +1,6 @@
 # Quadcopter Model Predictive Control (MPC)
 
-<img src="src/media/trajectory_plot_1.png" width="150" /><img src="src/media/trajectory_plot_2.png" width="150" /><img src="src/media/trajectory_plot_3.png" width="150" /><img src="src/media/trajectory_plot_4.png" width="150" />
+<img src="src/media/trajectory_plot_1.png" width="200" /><img src="src/media/trajectory_plot_2.png" width="200" /><img src="src/media/trajectory_plot_3.png" width="200" /><img src="src/media/trajectory_plot_4.png" width="200" />
 
 ## Table of Contents
 
