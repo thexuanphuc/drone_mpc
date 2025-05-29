@@ -352,8 +352,8 @@ def plot_u(time_log, u_log, scenario_to_run):
                  markersize=5, 
                  linewidth=2)
     
-    plt.xlabel('Time', fontsize=14)
-    plt.ylabel('u_log values', fontsize=14)
+    plt.xlabel('Time (s)', fontsize=14)
+    plt.ylabel('Throttle force (N)', fontsize=14)
     plt.title(f'Plot of u_log for scenario {scenario_to_run}', fontsize=16, fontweight='bold')
     
     plt.legend(title='Lines', fontsize=12)
