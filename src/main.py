@@ -1,6 +1,6 @@
 import numpy as np
 from mpc_controller import QuadcopterMPC
-from simulator import AdvancedSimulator, Plotter, export_simulation_data
+from simulator import AdvancedSimulator, Plotter, export_simulation_data, plot_u
 
 if __name__ == '__main__':
     # MODIFIED: Set scenario to 1 and adjust target_pos to test "going over"
@@ -58,6 +58,12 @@ if __name__ == '__main__':
             advanced_sim.time_log,
             advanced_sim.actual_state_log,
             advanced_sim.mpc_predicted_log,
+            scenario_to_run
+        )
+
+        plot_u(
+            advanced_sim.time_log,
+            advanced_sim.u_log,
             scenario_to_run
         )
         export_simulation_data(

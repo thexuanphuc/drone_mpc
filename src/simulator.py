@@ -39,7 +39,7 @@ class AdvancedSimulator:
         self.mpc_compute_time_log = []
         self.env.process(self.plant_process())
         self.env.process(self.mpc_process())
-
+        self.u_log = []
     def plant_process(self):
         while True:
             control_to_apply_ca = ca.DM(self.latest_control_input_np) 
@@ -89,6 +89,7 @@ class AdvancedSimulator:
                 )
                 end_time = time.time()  # End timing the MPC computation
                 self.mpc_compute_time_log.append(end_time - start_time)
+                self.u_log.append(u_sequence_ca[:, 0].full().reshape(4,-1))
                 self.latest_control_input_np = u_sequence_ca[:, 0].full().flatten()
                 self.prev_w_opt = w_opt_solution 
 
@@ -309,3 +310,61 @@ def export_simulation_data(time_log, actual_state_log, txt_filename="drone_data.
             print(f"Error exporting data to Excel file {excel_filename}: {e}")
     else:
         print(f"Skipping Excel export as pandas is not available.")
+
+
+# def plot_u(time_log, u_log, scenario_to_run):
+#     actual_np = np.array(u_log)  # reshape to 4 lines
+#     time_np = np.array(time_log)
+    
+#     # Plot each of the 4 lines
+#     for i in range(4):
+#         plt.plot(time_np, actual_np[:,i,0], label=f'Line {i+1}')
+
+#     plt.xlabel('Time')
+#     plt.ylabel('u_log values')
+#     plt.title(f'Plot of u_log for scenario {scenario_to_run}')
+#     plt.legend()
+#     plt.show()  # Display the plot
+
+
+def plot_u(time_log, u_log, scenario_to_run):
+    actual_np = np.array(u_log)  # shape: (N, 4, ?)
+    time_np = np.array(time_log)
+    print("the shape of actual_np", actual_np.shape)
+    print("the shape of time_np", time_np.shape)
+    
+    plt.style.use('seaborn-darkgrid')  # Apply a nice style with grid
+    
+    # Define colors and line styles for clarity
+    colors = ['tab:blue', 'tab:orange', 'tab:green', 'tab:red']
+    linestyles = ['-', '--', '-.', ':']
+    markers = ['o', 's', '^', 'd']
+    
+    plt.figure(figsize=(10, 6))  # Larger figure for better visibility
+    
+    # Plot each of the 4 lines with distinct styles
+    for i in range(4):
+        plt.plot(time_np, actual_np[:, i, 0], 
+                 label=f'Line {i+1}',
+                 color=colors[i], 
+                 linestyle=linestyles[i], 
+                 marker=markers[i], 
+                 markersize=5, 
+                 linewidth=2)
+    
+    plt.xlabel('Time', fontsize=14)
+    plt.ylabel('u_log values', fontsize=14)
+    plt.title(f'Plot of u_log for scenario {scenario_to_run}', fontsize=16, fontweight='bold')
+    
+    plt.legend(title='Lines', fontsize=12)
+    
+    plt.grid(True, which='both', linestyle='--', linewidth=0.7, alpha=0.7)  # Major and minor grid
+    
+    # Optionally customize ticks (example: set major ticks every 1 unit)
+    plt.minorticks_on()
+    plt.tick_params(axis='both', which='major', length=7, width=1.2)
+    plt.tick_params(axis='both', which='minor', length=4, color='gray')
+    
+    plt.tight_layout()  # Adjust layout to prevent clipping
+    
+    plt.show()  # Display the plot
