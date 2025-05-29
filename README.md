@@ -1,9 +1,6 @@
 # Quadcopter Model Predictive Control (MPC)
 
-<img src="src/media/trajectory_plot_1.png" width="150" />
-<img src="src/media/trajectory_plot_2.png" width="150" />
-<img src="src/media/trajectory_plot_3.png" width="150" />
-<img src="src/media/trajectory_plot_4.png" width="150" />
+<img src="src/media/trajectory_plot_1.png" width="150" /><img src="src/media/trajectory_plot_2.png" width="150" /><img src="src/media/trajectory_plot_3.png" width="150" /><img src="src/media/trajectory_plot_4.png" width="150" />
 
 ## Table of Contents
 
@@ -289,7 +286,7 @@ Display "Simulation Ended".
 
 | Parameter                | Symbol       | Value                   |
 | ------------------------|--------------|-------------------------|
-| Prediction horizon       | N            | 25                      |
+| Prediction horizon       | N            | 20                      |
 | MPC sampling time        | delta_t      | 0.1 s (configurable)    |
 | Plant integration dt     | Delta_t      | 0.01 s                  |
 | Mass                     | m            | 0.5 kg                  |
