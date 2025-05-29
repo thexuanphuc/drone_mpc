@@ -75,11 +75,9 @@ From rotor thrusts to aggregate forces/moments:
 
 #### 3. Position Kinematics
 
-$$
-\dot{x} = u  \\
-\dot{y} = v  \\
-\dot{z} = w \\
-$$
+$$ \dot{x} = u  $$
+$$ \dot{y} = v  $$
+$$\dot{z} = w $$
 
 #### 4. Translational Dynamics
 
@@ -89,11 +87,10 @@ $$ \dot{w} = \frac{1}{m} (\cos\phi \cos\theta)  f1 - g $$
 
 #### 5. Euler Angle Rates
 
-$$
-\dot{\phi} = p \\  
-\dot{\theta} = q  \\
-\dot{\psi} = r
-$$
+$$ \dot{\phi} = p$$
+$$ \dot{\theta} = q $$
+$$ \dot{\psi} = r $$
+
 
 
 #### 6. Rotational Dynamics
