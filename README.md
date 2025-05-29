@@ -67,7 +67,7 @@ The continuous-time dynamics define the right-hand-side (RHS) of the system: **x
 
 From rotor thrusts to aggregate forces/moments:
 
-- Total thrust: `f1 = a1 + a2 + a3 + a4`
+- Total thrust/throttle: `f1 = a1 + a2 + a3 + a4`
 - Roll moment (x-axis): `f2 = a3 + a2 - a1 - a4`
 - Pitch moment (y-axis): `f3 = a4 + a3 - a1 - a2`
 - Yaw moment (z-axis): `f4 = a1 - a2 + a3 - a4`
