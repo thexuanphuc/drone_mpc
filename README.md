@@ -100,11 +100,12 @@ $$
 
 #### 6. Rotational Dynamics
 
-$$
-\dot{p} = \frac{Iy - Iz}{Ix} qr + \frac{l_1}{Ix}f_2  \\
-\dot{q} = \frac{Iz - Ix}{Iy}pr + \frac{l_2}{Iy}f_3\\  
-\dot{r} = \frac{Ix - Iy}{Iz}pq + \frac{Kd}{Iz}f_4
-$$
+$$\dot{p} = \frac{Iy - Iz}{Ix} qr + \frac{l_1}{Ix}f_2$$
+
+$$\dot{q} = \frac{Iz - Ix}{Iy}pr + \frac{l_2}{Iy}f_3$$
+
+$$\dot{r} = \frac{Ix - Iy}{Iz}pq + \frac{Kd}{Iz}f_4$$
+
 
 These equations are wrapped in a CasADi function `f(s, a)` and integrated using Runge–Kutta (RK4) with sampling time `T = 0.1 s`.
 
